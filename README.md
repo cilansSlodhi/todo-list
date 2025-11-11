@@ -1,36 +1,131 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📝 Modern Todo List Application
 
-## Getting Started
+A beautiful and fully functional Todo List application built with Next.js, React, and Tailwind CSS.
 
-First, run the development server:
+## ✨ Features
+
+- **Add Tasks**: Create new tasks with customizable priority levels (Low, Medium, High)
+- **Complete Tasks**: Mark tasks as completed with a satisfying checkmark
+- **Delete Tasks**: Remove tasks you no longer need
+- **Filter Tasks**: View All, Active, or Completed tasks
+- **Priority Levels**: Color-coded priority badges for better task organization
+- **Task Statistics**: Real-time counters showing total, active, and completed tasks
+- **Clear Completed**: Bulk delete all completed tasks at once
+- **Modern UI**: Beautiful gradient backgrounds and smooth animations
+- **Dark Mode Support**: Automatically adapts to your system's color scheme
+- **Responsive Design**: Works perfectly on desktop, tablet, and mobile devices
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ installed on your machine
+- npm or yarn package manager
+
+### Installation
+
+1. Navigate to the project directory:
+```bash
+cd todo-list
+```
+
+2. Install dependencies (if not already installed):
+```bash
+npm install
+```
+
+### Running the Application
+
+Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open your browser and navigate to [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Building for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Build the application:
 
-## Learn More
+```bash
+npm run build
+```
 
-To learn more about Next.js, take a look at the following resources:
+Start the production server:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🎨 Design Features
 
-## Deploy on Vercel
+- **Gradient Backgrounds**: Beautiful multi-color gradients that adapt to dark mode
+- **Smooth Animations**: Polished transitions and hover effects
+- **Custom Icons**: Using Lucide React for modern, clean icons
+- **Custom Scrollbar**: Styled scrollbar for a cohesive look
+- **Priority Colors**: 
+  - 🟢 Low Priority (Green)
+  - 🟡 Medium Priority (Yellow)
+  - 🔴 High Priority (Red)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🛠️ Technology Stack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Framework**: Next.js 16
+- **UI Library**: React 19
+- **Styling**: Tailwind CSS 4
+- **Icons**: Lucide React
+- **Language**: TypeScript
+- **State Management**: React useState (client-side only, no backend)
+
+## 📁 Project Structure
+
+```
+todo-list/
+├── app/
+│   ├── components/
+│   │   ├── AddTodo.tsx      # Component for adding new tasks
+│   │   ├── TodoItem.tsx      # Individual todo item component
+│   │   └── TodoList.tsx      # Main todo list component with filters
+│   ├── types/
+│   │   └── todo.ts           # TypeScript interfaces and types
+│   ├── globals.css           # Global styles and animations
+│   ├── layout.tsx            # Root layout
+│   └── page.tsx              # Main page
+├── public/                   # Static assets
+├── package.json
+└── README.md
+```
+
+## 💡 Usage Tips
+
+1. **Adding Tasks**: 
+   - Click the input field to reveal priority options
+   - Select priority before adding the task
+   - Press Enter or click "Add" button
+
+2. **Managing Tasks**:
+   - Click the circle icon to toggle completion
+   - Hover over a task to reveal the delete button
+   - Use filters to focus on specific task types
+
+3. **Bulk Actions**:
+   - Use the "Clear completed" button to remove all finished tasks at once
+
+## 🌟 Sample Data
+
+The application comes with 5 sample tasks to demonstrate functionality:
+- 2 completed tasks
+- 3 active tasks with varying priority levels
+
+## 📝 License
+
+This project is open source and available for personal and commercial use.
+
+## 🤝 Contributing
+
+Feel free to fork this project and customize it to your needs!
+
+---
+
+Built with ❤️ using Next.js and React
