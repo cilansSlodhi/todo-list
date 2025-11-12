@@ -1,76 +1,77 @@
 'use client';
 
-import { useState } from 'react';
-import { Todo, FilterType } from '../types/todo';
+import { useState, useEffect } from 'react';
+import { FilterType } from '../types/todo';
 import TodoItem from './TodoItem';
 import AddTodo from './AddTodo';
-import { ListTodo, CheckCircle, Circle, Trash2 } from 'lucide-react';
-
-const INITIAL_TODOS: Todo[] = [
-  {
-    id: '1',
-    text: 'Build an amazing Todo List app with Next.js',
-    completed: true,
-    createdAt: new Date('2025-11-10'),
-    priority: 'high',
-  },
-  {
-    id: '2',
-    text: 'Design a modern and beautiful UI',
-    completed: true,
-    createdAt: new Date('2025-11-10'),
-    priority: 'high',
-  },
-  {
-    id: '3',
-    text: 'Add filter functionality for todos',
-    completed: false,
-    createdAt: new Date('2025-11-11'),
-    priority: 'medium',
-  },
-  {
-    id: '4',
-    text: 'Implement add and delete features',
-    completed: false,
-    createdAt: new Date('2025-11-11'),
-    priority: 'medium',
-  },
-  {
-    id: '5',
-    text: 'Test the application thoroughly',
-    completed: false,
-    createdAt: new Date('2025-11-11'),
-    priority: 'low',
-  },
-];
+import { ListTodo, CheckCircle, Circle, Trash2, RefreshCw, AlertCircle } from 'lucide-react';
+import * as api from '../services/api';
 
 export default function TodoList() {
-  const [todos, setTodos] = useState<Todo[]>(INITIAL_TODOS);
+  const [todos, setTodos] = useState<api.Todo[]>([]);
   const [filter, setFilter] = useState<FilterType>('all');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleAddTodo = (text: string, priority: 'low' | 'medium' | 'high') => {
-    const newTodo: Todo = {
-      id: Date.now().toString(),
-      text,
-      completed: false,
-      createdAt: new Date(),
-      priority,
-    };
-    setTodos([newTodo, ...todos]);
+  // Fetch todos on component mount
+  useEffect(() => {
+    loadTodos();
+  }, []);
+
+  const loadTodos = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const fetchedTodos = await api.fetchTodos();
+      setTodos(fetchedTodos);
+    } catch (err) {
+      setError('Failed to load todos. Make sure the backend server is running on http://localhost:5000');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleToggleTodo = (id: string) => {
-    setTodos(todos.map(todo => 
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    ));
+  const handleAddTodo = async (text: string, priority: 'low' | 'medium' | 'high') => {
+    try {
+      const newTodo = await api.createTodo(text, priority);
+      setTodos([newTodo, ...todos]);
+    } catch (err) {
+      setError('Failed to add todo');
+      console.error(err);
+    }
   };
 
-  const handleDeleteTodo = (id: string) => {
-    setTodos(todos.filter(todo => todo.id !== id));
+  const handleToggleTodo = async (id: string) => {
+    try {
+      const updatedTodo = await api.toggleTodo(id);
+      setTodos(todos.map(todo => 
+        todo.id === id ? updatedTodo : todo
+      ));
+    } catch (err) {
+      setError('Failed to update todo');
+      console.error(err);
+    }
   };
 
-  const handleClearCompleted = () => {
-    setTodos(todos.filter(todo => !todo.completed));
+  const handleDeleteTodo = async (id: string) => {
+    try {
+      await api.deleteTodo(id);
+      setTodos(todos.filter(todo => todo.id !== id));
+    } catch (err) {
+      setError('Failed to delete todo');
+      console.error(err);
+    }
+  };
+
+  const handleClearCompleted = async () => {
+    try {
+      await api.deleteCompletedTodos();
+      setTodos(todos.filter(todo => !todo.completed));
+    } catch (err) {
+      setError('Failed to clear completed todos');
+      console.error(err);
+    }
   };
 
   const filteredTodos = todos.filter(todo => {
@@ -100,7 +101,37 @@ export default function TodoList() {
         <p className="text-gray-600 dark:text-gray-400">
           Organize your tasks and boost your productivity
         </p>
+        <div className="flex items-center justify-center gap-2 pt-2">
+          <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
+            <div className={`w-2 h-2 rounded-full ${error ? 'bg-red-500' : 'bg-green-500'} animate-pulse`}></div>
+            {error ? 'Backend Disconnected' : 'Connected to Backend'}
+          </div>
+          <button
+            onClick={loadTodos}
+            disabled={loading}
+            className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50"
+            title="Refresh todos"
+          >
+            <RefreshCw className={`w-4 h-4 text-gray-500 ${loading ? 'animate-spin' : ''}`} />
+          </button>
+        </div>
       </div>
+
+      {/* Error Message */}
+      {error && (
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm text-red-800 dark:text-red-300">{error}</p>
+            <button
+              onClick={() => setError(null)}
+              className="text-xs text-red-600 dark:text-red-400 hover:underline mt-1"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Add Todo */}
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
@@ -166,7 +197,14 @@ export default function TodoList() {
 
       {/* Todo List */}
       <div className="space-y-3">
-        {filteredTodos.length === 0 ? (
+        {loading ? (
+          <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-lg">
+            <div className="flex flex-col items-center gap-4">
+              <RefreshCw className="w-12 h-12 text-blue-500 animate-spin" />
+              <p className="text-gray-600 dark:text-gray-400">Loading todos...</p>
+            </div>
+          </div>
+        ) : filteredTodos.length === 0 ? (
           <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-lg">
             <div className="flex flex-col items-center gap-4">
               <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-full">
@@ -188,7 +226,10 @@ export default function TodoList() {
           filteredTodos.map(todo => (
             <TodoItem
               key={todo.id}
-              todo={todo}
+              todo={{
+                ...todo,
+                createdAt: new Date(todo.createdAt),
+              }}
               onToggle={handleToggleTodo}
               onDelete={handleDeleteTodo}
             />
@@ -198,4 +239,5 @@ export default function TodoList() {
     </div>
   );
 }
+
 
