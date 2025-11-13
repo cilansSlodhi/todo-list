@@ -6,7 +6,7 @@ import { Plus } from 'lucide-react';
 interface AddTodoProps {
   onAdd: (text: string, priority: 'low' | 'medium' | 'high') => void;
 }
-
+//Todo: Add Todo Component
 export default function AddTodo({ onAdd }: AddTodoProps) {
   const [text, setText] = useState('');
   const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('medium');
