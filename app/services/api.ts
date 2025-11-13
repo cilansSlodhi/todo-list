@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://yo8ebtddji.execute-api.ap-northeast-3.amazonaws.com/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export interface Todo {
   id: string;
