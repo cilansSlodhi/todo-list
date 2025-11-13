@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://todo-backend-env.eba-33cyikmh.ap-northeast-3.elasticbeanstalk.com/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://yo8ebtddji.execute-api.ap-northeast-3.amazonaws.com/api';
 
 export interface Todo {
   id: string;

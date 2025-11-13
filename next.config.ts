@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://todo-backend-env.eba-33cyikmh.ap-northeast-3.elasticbeanstalk.com/api/:path*',
+        destination: 'https://yo8ebtddji.execute-api.ap-northeast-3.amazonaws.com/api/:path*',
       },
     ];
   },
