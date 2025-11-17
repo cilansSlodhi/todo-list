@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/todos';
 
 export interface Todo {
   id: string;
@@ -18,7 +18,7 @@ export interface ApiResponse<T> {
 // Get all todos
 export async function fetchTodos(): Promise<Todo[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/todos`);
+    const response = await fetch(`${API_BASE_URL}`);
     if (!response.ok) throw new Error('Failed to fetch todos');
     const result: ApiResponse<Todo[]> = await response.json();
     return result.data || [];
@@ -31,7 +31,7 @@ export async function fetchTodos(): Promise<Todo[]> {
 // Create a new todo
 export async function createTodo(text: string, priority: 'low' | 'medium' | 'high'): Promise<Todo> {
   try {
-    const response = await fetch(`${API_BASE_URL}/todos`, {
+    const response = await fetch(`${API_BASE_URL}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ export async function createTodo(text: string, priority: 'low' | 'medium' | 'hig
 // Toggle todo completion
 export async function toggleTodo(id: string): Promise<Todo> {
   try {
-    const response = await fetch(`${API_BASE_URL}/todos/${id}/toggle`, {
+    const response = await fetch(`${API_BASE_URL}/${id}/toggle`, {
       method: 'PATCH',
     });
     if (!response.ok) throw new Error('Failed to toggle todo');
@@ -68,7 +68,7 @@ export async function updateTodo(
   updates: { text?: string; completed?: boolean; priority?: string }
 ): Promise<Todo> {
   try {
-    const response = await fetch(`${API_BASE_URL}/todos/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -87,7 +87,7 @@ export async function updateTodo(
 // Delete a todo
 export async function deleteTodo(id: string): Promise<void> {
   try {
-    const response = await fetch(`${API_BASE_URL}/todos/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/${id}`, {
       method: 'DELETE',
     });
     if (!response.ok) throw new Error('Failed to delete todo');
@@ -100,7 +100,7 @@ export async function deleteTodo(id: string): Promise<void> {
 // Delete all completed todos
 export async function deleteCompletedTodos(): Promise<number> {
   try {
-    const response = await fetch(`${API_BASE_URL}/todos/completed/all`, {
+    const response = await fetch(`${API_BASE_URL}/completed/all`, {
       method: 'DELETE',
     });
     if (!response.ok) throw new Error('Failed to delete completed todos');
@@ -115,7 +115,7 @@ export async function deleteCompletedTodos(): Promise<number> {
 // Get statistics
 export async function getStats(): Promise<{ total: number; active: number; completed: number }> {
   try {
-    const response = await fetch(`${API_BASE_URL}/todos/stats`);
+    const response = await fetch(`${API_BASE_URL}/stats`);
     if (!response.ok) throw new Error('Failed to fetch stats');
     const result: ApiResponse<any> = await response.json();
     return result.data || { total: 0, active: 0, completed: 0 };
