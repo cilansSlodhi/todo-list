@@ -1,3 +1,4 @@
+//change the api url to the api url of the backend
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/todos';
 
 export interface Todo {
